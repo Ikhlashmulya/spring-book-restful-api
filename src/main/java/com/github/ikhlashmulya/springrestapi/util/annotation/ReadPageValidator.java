@@ -14,11 +14,11 @@ public class ReadPageValidator implements ConstraintValidator<ReadPageNotExceedP
     @Override
     public boolean isValid(Object object, ConstraintValidatorContext constraintValidatorContext) {
         if (object instanceof UpdateBookRequest updateBookRequest) {
-            return updateBookRequest.getReadPage() <= updateBookRequest.getPageCount();
+            return updateBookRequest.getReadPage() <= updateBookRequest.getTotalPage();
         }
 
         if (object instanceof CreateBookRequest createBookRequest) {
-            return createBookRequest.getReadPage() <= createBookRequest.getPageCount();
+            return createBookRequest.getReadPage() <= createBookRequest.getTotalPage();
         }
 
         return true;

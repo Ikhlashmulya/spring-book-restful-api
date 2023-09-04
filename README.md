@@ -18,7 +18,7 @@ Request :
   "author": "string",
   "summary": "string",
   "publisher": "string",
-  "page_count": 0,
+  "total_page": 0,
   "read_page": 0
 }
 ```
@@ -36,11 +36,12 @@ Response :
     "summary": "this is summary",
     "publisher": "Informatika",
     "finished": false,
-    "page_count": 100,
+    "total_page": 100,
     "read_page": 10,
     "inserted_at": "2023-08-23T21:03:25.000+07:00",
     "updated_at": "2023-08-23T21:03:25.000+07:00"
-  }
+  },
+  "pagination": null
 }
 ```
 
@@ -58,7 +59,7 @@ Request :
   "author": "string",
   "summary": "string",
   "publisher": "string",
-  "page_count": 0,
+  "total_page": 0,
   "read_page": 0
 }
 ```
@@ -75,11 +76,12 @@ Response :
     "summary": "this is summary",
     "publisher": "Informatika",
     "finished": false,
-    "page_count": 100,
+    "total_page": 100,
     "read_page": 10,
     "inserted_at": "2023-08-23T21:03:25.000+07:00",
     "updated_at": "2023-08-23T21:06:26.624+07:00"
-  }
+  },
+  "pagination": null
 }
 ```
 
@@ -102,11 +104,12 @@ Response :
     "summary": "this is summary",
     "publisher": "Informatika",
     "finished": false,
-    "page_count": 100,
+    "total_page": 100,
     "read_page": 10,
     "inserted_at": "2023-08-23T21:03:25.000+07:00",
     "updated_at": "2023-08-23T21:06:26.624+07:00"
-  }
+  },
+  "pagination": null
 }
 ```
 
@@ -115,7 +118,7 @@ Response :
 Request :
 
 - Method : GET
-- URL : `/api/books`
+- URL : `/api/books?page=1&page_size=2`
 
 Response : 
 ```json
@@ -133,7 +136,14 @@ Response :
       "name": "Testing Book",
       "publisher": "Informatika"
     }
-  ]
+  ],
+  "pagination": {
+    "page": 1,
+    "total_page": 4,
+    "has_next": true,
+    "page_size": 5,
+    "total_items": 19
+  }
 }
 ```
 
@@ -149,7 +159,8 @@ Response :
 {
   "status": "success",
   "errors": null,
-  "data": "data deleted"
+  "data": "data deleted",
+  "pagination": null
 }
 ```
 

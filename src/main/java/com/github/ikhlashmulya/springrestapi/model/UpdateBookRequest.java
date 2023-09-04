@@ -8,8 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data @Builder
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ReadPageNotExceedPageCount
 public class UpdateBookRequest {
     @JsonIgnore
@@ -26,8 +26,8 @@ public class UpdateBookRequest {
     @NotBlank
     private String publisher;
 
-    @NotNull @JsonProperty(value = "page_count")
-    private Integer pageCount;
+    @NotNull @JsonProperty(value = "total_page")
+    private Integer totalPage;
 
     @NotNull @JsonProperty(value = "read_page")
     private Integer readPage;

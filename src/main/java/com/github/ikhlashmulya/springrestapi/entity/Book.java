@@ -2,17 +2,21 @@ package com.github.ikhlashmulya.springrestapi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
-@Entity
+@Entity @Table
 @Data @Builder
-@NoArgsConstructor @AllArgsConstructor
-@Getter @Setter
-@EqualsAndHashCode
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable = false)
@@ -26,8 +30,8 @@ public class Book {
     @Column(nullable = false)
     private String publisher;
 
-    @Column(name = "page_count", nullable = false)
-    private Integer pageCount;
+    @Column(name = "total_page", nullable = false)
+    private Integer totalPage;
 
     @Column(name = "read_page", nullable = false)
     private Integer readPage;
@@ -35,9 +39,11 @@ public class Book {
     @Column(nullable = false)
     private Boolean finished;
 
-    @Column(name = "inserted_at", nullable = false)
-    private Timestamp insertedAt;
+    @CreatedDate
+    @Column(name = "inserted_at")
+    private Instant insertedAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updatedAt;
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 }

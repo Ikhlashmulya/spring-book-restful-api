@@ -3,12 +3,15 @@ package com.github.ikhlashmulya.springrestapi.controller;
 import com.github.ikhlashmulya.springrestapi.model.*;
 import com.github.ikhlashmulya.springrestapi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -66,9 +69,23 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<WebResponse<List<ListBookResponse>>> findAll() {
-        List<ListBookResponse> responses = bookService.findAll();
+    public ResponseEntity<WebResponse<List<ListBookResponse>>> findAll(
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "page_size", defaultValue = "5") Integer pageSize
+    ) {
+        PageRequest paging = PageRequest.of(page, pageSize);
+        Page<ListBookResponse> responses = bookService.findAll(paging);
 
-        return ResponseEntity.ok(WebResponse.<List<ListBookResponse>>builder().status("success").data(responses).build());
+        return ResponseEntity.ok(WebResponse.<List<ListBookResponse>>builder()
+                .status("success")
+                .data(responses.stream().toList())
+                .pagination(Map.of(
+                        "page", page,
+                        "page_size", pageSize,
+                        "has_next", responses.hasNext(),
+                        "total_page", responses.getTotalPages(),
+                        "total_items", responses.getTotalElements()
+                ))
+                .build());
     }
 }

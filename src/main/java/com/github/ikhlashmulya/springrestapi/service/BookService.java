@@ -8,11 +8,9 @@ import com.github.ikhlashmulya.springrestapi.model.ListBookResponse;
 import com.github.ikhlashmulya.springrestapi.model.UpdateBookRequest;
 import com.github.ikhlashmulya.springrestapi.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class BookService {
@@ -33,16 +31,13 @@ public class BookService {
         validationService.validate(request);
 
         Book book = Book.builder().
-                id(UUID.randomUUID().toString()).
                 name(request.getName()).
                 author(request.getAuthor()).
                 publisher(request.getPublisher()).
                 readPage(request.getReadPage()).
-                pageCount(request.getPageCount()).
+                totalPage(request.getTotalPage()).
                 summary(request.getSummary()).
-                finished(request.getPageCount().equals(request.getReadPage())).
-                insertedAt(new Timestamp(System.currentTimeMillis())).
-                updatedAt(new Timestamp(System.currentTimeMillis())).
+                finished(request.getTotalPage().equals(request.getReadPage())).
                 build();
 
         bookRepository.save(book);
@@ -60,10 +55,9 @@ public class BookService {
         book.setAuthor(request.getAuthor());
         book.setPublisher(request.getPublisher());
         book.setSummary(request.getSummary());
-        book.setPageCount(request.getPageCount());
+        book.setTotalPage(request.getTotalPage());
         book.setReadPage(request.getReadPage());
-        book.setFinished(request.getPageCount().equals(request.getReadPage()));
-        book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        book.setFinished(request.getTotalPage().equals(request.getReadPage()));
 
         bookRepository.save(book);
 
@@ -76,10 +70,10 @@ public class BookService {
         bookRepository.delete(book);
     }
 
-    public List<ListBookResponse> findAll() {
-        List<Book> books = bookRepository.findAll();
+    public Page<ListBookResponse> findAll(Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(pageable);
 
-        return books.stream().map(this::toListBookResponse).toList();
+        return books.map(this::toListBookResponse);
     }
 
     private BookResponse toBookResponse(Book book) {
@@ -89,7 +83,7 @@ public class BookService {
                 author(book.getAuthor()).
                 summary(book.getSummary()).
                 publisher(book.getPublisher()).
-                pageCount(book.getPageCount()).
+                totalPage(book.getTotalPage()).
                 readPage(book.getReadPage()).
                 finished(book.getFinished()).
                 insertedAt(book.getInsertedAt()).

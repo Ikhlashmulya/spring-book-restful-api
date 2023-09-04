@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @SpringBootTest
@@ -37,29 +37,23 @@ public class BookControllerTest {
         bookRepository.deleteAll();
 
         Book book1 = new Book();
-        book1.setId("1");
         book1.setName("Buku Testing");
         book1.setAuthor("John Doe");
         book1.setSummary("this is summary");
         book1.setPublisher("Informatika");
         book1.setReadPage(2);
-        book1.setPageCount(100);
+        book1.setTotalPage(100);
         book1.setFinished(false);
-        book1.setInsertedAt(new Timestamp(System.currentTimeMillis()));
-        book1.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         bookRepository.save(book1);
 
         Book book2 = new Book();
-        book2.setId("2");
         book2.setName("Buku Testing 2");
         book2.setAuthor("John Doe");
         book2.setSummary("this is summary");
         book2.setPublisher("Informatika");
         book2.setReadPage(2);
-        book2.setPageCount(100);
+        book2.setTotalPage(100);
         book2.setFinished(false);
-        book2.setInsertedAt(new Timestamp(System.currentTimeMillis()));
-        book2.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         bookRepository.save(book2);
     }
 
@@ -71,7 +65,7 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(2);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
                 post("/api/books")
@@ -88,7 +82,7 @@ public class BookControllerTest {
             assertEquals(request.getName(), response.getData().getName());
             assertEquals(request.getAuthor(), response.getData().getAuthor());
             assertEquals(request.getSummary(), response.getData().getSummary());
-            assertEquals(request.getPageCount(), response.getData().getPageCount());
+            assertEquals(request.getTotalPage(), response.getData().getTotalPage());
             assertEquals(request.getReadPage(), response.getData().getReadPage());
             assertNotNull(response.getData().getId());
             assertNotNull(response.getData().getFinished());
@@ -105,7 +99,7 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(200);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
                 post("/api/books")
@@ -130,7 +124,7 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(20);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
                 post("/api/books")
@@ -150,16 +144,13 @@ public class BookControllerTest {
     @Test
     void testUpdateBookControllerSuccess() throws Exception {
         Book book = new Book();
-        book.setId("10");
         book.setName("Buku Golang");
         book.setAuthor("John Doe");
         book.setSummary("this is summary");
         book.setPublisher("Informatika");
         book.setReadPage(2);
-        book.setPageCount(100);
+        book.setTotalPage(100);
         book.setFinished(false);
-        book.setInsertedAt(new Timestamp(System.currentTimeMillis()));
-        book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         bookRepository.save(book);
 
         UpdateBookRequest request = new UpdateBookRequest();
@@ -168,10 +159,10 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(100);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
-                put("/api/books/10")
+                put("/api/books/"+book.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -196,10 +187,8 @@ public class BookControllerTest {
         book.setSummary("this is summary");
         book.setPublisher("Informatika");
         book.setReadPage(2);
-        book.setPageCount(100);
+        book.setTotalPage(100);
         book.setFinished(false);
-        book.setInsertedAt(new Timestamp(System.currentTimeMillis()));
-        book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         bookRepository.save(book);
 
         UpdateBookRequest request = new UpdateBookRequest();
@@ -208,7 +197,7 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(120);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
                 put("/api/books/10")
@@ -228,16 +217,13 @@ public class BookControllerTest {
     @Test
     void testUpdateBookControllerErrorNotBlankValidation() throws Exception {
         Book book = new Book();
-        book.setId("10");
         book.setName("Buku Golang");
         book.setAuthor("John Doe");
         book.setSummary("this is summary");
         book.setPublisher("Informatika");
         book.setReadPage(2);
-        book.setPageCount(100);
+        book.setTotalPage(100);
         book.setFinished(false);
-        book.setInsertedAt(new Timestamp(System.currentTimeMillis()));
-        book.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         bookRepository.save(book);
 
         UpdateBookRequest request = new UpdateBookRequest();
@@ -246,7 +232,7 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(10);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
                 put("/api/books/10")
@@ -271,7 +257,7 @@ public class BookControllerTest {
         request.setSummary("this is summary");
         request.setPublisher("Informatika");
         request.setReadPage(10);
-        request.setPageCount(100);
+        request.setTotalPage(100);
 
         mockMvc.perform(
                 put("/api/books/10")
@@ -290,8 +276,18 @@ public class BookControllerTest {
 
     @Test
     void testFindByIdBookControllerSuccess() throws Exception {
+        Book book = new Book();
+        book.setName("Buku Golang");
+        book.setAuthor("John Doe");
+        book.setSummary("this is summary");
+        book.setPublisher("Informatika");
+        book.setReadPage(2);
+        book.setTotalPage(100);
+        book.setFinished(false);
+        bookRepository.save(book);
+
         mockMvc.perform(
-                get("/api/books/1")
+                get("/api/books/"+book.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
@@ -301,7 +297,7 @@ public class BookControllerTest {
             });
             assertNull(response.getErrors());
             assertEquals("success", response.getStatus());
-            assertEquals("Buku Testing", response.getData().getName());
+            assertEquals(book.getName(), response.getData().getName());
         });
     }
 
@@ -323,8 +319,18 @@ public class BookControllerTest {
 
     @Test
     void testDeleteByIdBookControllerSuccess() throws Exception {
+        Book book = new Book();
+        book.setName("Buku Golang");
+        book.setAuthor("John Doe");
+        book.setSummary("this is summary");
+        book.setPublisher("Informatika");
+        book.setReadPage(2);
+        book.setTotalPage(100);
+        book.setFinished(false);
+        bookRepository.save(book);
+
         mockMvc.perform(
-                delete("/api/books/1")
+                delete("/api/books/"+book.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
